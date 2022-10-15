@@ -125,10 +125,12 @@ class WeatherFragment : Fragment() {
                         // We add current weather related data
                         bnd.tvMainTemperature.text = temp
                         bnd.tvMainDesc.text = desc
-                        bnd.tvRain.text = rain
-                        bnd.tvHumidity.text = humidity
-                        bnd.tvWindSpeed.text = windSpeed
                         bnd.tvMonthDay.text = getMonthAndDay(timestamp!!)
+
+                        // We access the views of the included layout and set the data
+                        bnd.includedCurrenWeatherLayout.tvRain.text = rain
+                        bnd.includedCurrenWeatherLayout.tvHumidity.text = humidity
+                        bnd.includedCurrenWeatherLayout.tvWindSpeed.text = windSpeed
 
                         // Hourly Weather Data RecyclerView
                         bnd.rvHourly.adapter = HourlyWeatherAdapter(requireContext(), safeWeatherModel.hourly!!.toMutableList())
