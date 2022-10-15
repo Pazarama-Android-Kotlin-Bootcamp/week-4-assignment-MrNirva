@@ -28,6 +28,7 @@ import kotlinx.coroutines.runBlocking
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.text.SimpleDateFormat
 import java.util.*
 
 class WeatherFragment : Fragment() {
@@ -60,10 +61,12 @@ class WeatherFragment : Fragment() {
         navController = findNavController()
         sharedPref = SharedPref(requireContext())
 
+        // redirect to the search section
         bnd.clLocation.setOnClickListener{
             navController.navigate(R.id.action_weatherFragment_to_searchLocationFragment)
         }
 
+        // redirect to the setting section
         bnd.ivSettings.setOnClickListener {
             navController.navigate(R.id.action_weatherFragment_to_settingsFragment)
         }
@@ -76,8 +79,8 @@ class WeatherFragment : Fragment() {
 
         val ap = AppPref(requireContext())
 
+        // CoroutineScope for suspend DataStore method
         CoroutineScope(Dispatchers.Main).launch {
-
 
             bnd.tvLocationName.text = ap.getLocationName()
             if(ap.getLocationName().isNotEmpty() && ap.getLat() != 0.0 && ap.getLon() != 0.0){
@@ -88,9 +91,9 @@ class WeatherFragment : Fragment() {
 
     }
 
+    // We get the weather of the location with the latitude and longitude values
     private fun getWeather(lat:Double, lon:Double){
 
-        // , Locale.getDefault().language
         ApiClient.getApiService().getWeather(lat, lon, sharedPref.getUnitOfMeasure()).enqueue(object:
             Callback<WeatherModel> {
 
@@ -98,35 +101,45 @@ class WeatherFragment : Fragment() {
 
                 if(response.isSuccessful){
 
-                    Log.e("getWeather","Response: ${response.body()}")
+                    response.body().let { safeWeatherModel ->
 
-                    val res = response.body()?.current?.weather?.get(0)?.icon
+                        Log.e("getWeather","Response: $safeWeatherModel")
 
-                    Glide.with(requireContext().applicationContext)
-                        .load(Constants.IMAGE_API_ADDRESS + res.toString() + Constants.IMAGE_TYPE)
-                        .into(bnd.ivWeatherImage)
+                        val res = safeWeatherModel?.current?.weather?.get(0)?.icon
 
-                    val model = response.body()
-                    val current = model?.current
-                    val weather = model?.current?.weather?.get(0)
+                        // Download and set current weather icon
+                        Glide.with(requireContext().applicationContext)
+                            .load(Constants.IMAGE_API_ADDRESS + res.toString() + Constants.IMAGE_TYPE)
+                            .into(bnd.ivWeatherImage)
 
-                    val temp = current?.temp?.toInt().toString()+"º"
-                    val rain = current?.dewPoint?.toInt().toString() + "%"
-                    val humidity = current?.humidity.toString() + "%"
-                    val windSpeed = current?.windSpeed?.toInt().toString() + " km/h"
-                    val desc = weather?.description?.replaceFirstChar(Char::titlecase)
+                        val current = safeWeatherModel?.current
+                        val weather = safeWeatherModel?.current?.weather?.get(0)
 
-                    bnd.tvMainTemperature.text = temp
-                    bnd.tvMainDesc.text = desc
-                    bnd.tvRain.text = rain
-                    bnd.tvHumidity.text = humidity
-                    bnd.tvWindSpeed.text = windSpeed
+                        val temp = current?.temp?.toInt().toString()+"º"
+                        val rain = current?.dewPoint?.toInt().toString() + "%"
+                        val humidity = current?.humidity.toString() + "%"
+                        val windSpeed = current?.windSpeed?.toInt().toString() + " km/h"
+                        val desc = weather?.description?.replaceFirstChar(Char::titlecase)
+                        val timestamp = current?.dt?.toLong()
 
-                    bnd.rvHourly.adapter = HourlyWeatherAdapter(requireContext(), model?.hourly!!.toMutableList())
-                    bnd.rvHourly.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+                        // We add current weather related data
+                        bnd.tvMainTemperature.text = temp
+                        bnd.tvMainDesc.text = desc
+                        bnd.tvRain.text = rain
+                        bnd.tvHumidity.text = humidity
+                        bnd.tvWindSpeed.text = windSpeed
+                        bnd.tvMonthDay.text = getMonthAndDay(timestamp!!)
 
-                    bnd.rvNextForecast.adapter = DailyWeatherAdapter(requireContext(), model.daily!!.toMutableList())
-                    bnd.rvNextForecast.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+                        // Hourly Weather Data RecyclerView
+                        bnd.rvHourly.adapter = HourlyWeatherAdapter(requireContext(), safeWeatherModel.hourly!!.toMutableList())
+                        bnd.rvHourly.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+
+                        // Next Forecast Weather Data RecyclerView
+                        bnd.rvNextForecast.adapter = DailyWeatherAdapter(requireContext(), safeWeatherModel.daily!!.toMutableList())
+                        bnd.rvNextForecast.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+
+
+                    }
 
                 }else{
                     Log.e("getWeather","response.code() -> ${response.code()}")
@@ -146,5 +159,9 @@ class WeatherFragment : Fragment() {
 
     }
 
+    // Convert short month name and day
+    private fun getMonthAndDay(timestamp: Long): String {
+        return SimpleDateFormat("MMM, d", Locale.ENGLISH).format(timestamp * 1000)
+    }
 
 }

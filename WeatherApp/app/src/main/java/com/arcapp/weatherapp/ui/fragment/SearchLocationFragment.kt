@@ -50,6 +50,7 @@ class SearchLocationFragment : Fragment() {
             prepareSearch(bnd.etSearch.text.toString())
         }
 
+        // Method that makes a search when you press the search key on the keyboard
         bnd.etSearch.setOnEditorActionListener(OnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 prepareSearch(bnd.etSearch.text.toString())
@@ -60,6 +61,7 @@ class SearchLocationFragment : Fragment() {
 
     }
 
+    // Check search data
     private fun prepareSearch(locationName: String){
 
         if(locationName.isEmpty()){
@@ -67,11 +69,11 @@ class SearchLocationFragment : Fragment() {
             return
         }
 
-        Log.e("getLocation","locationName: ${locationName}")
         getLocation(locationName)
 
     }
 
+    // Service that brings the values of the location such as lat lon according to the entered data
     private fun getLocation(locationName: String){
 
         ApiClient.getApiService().getLocation(locationName, 1).enqueue(object:
@@ -116,6 +118,7 @@ class SearchLocationFragment : Fragment() {
 
     }
 
+    // Method that writes location data to memory
     private fun saveData(locationModel: LocationModel){
 
         val ap = AppPref(requireContext())

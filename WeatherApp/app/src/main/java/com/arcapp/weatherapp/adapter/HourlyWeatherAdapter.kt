@@ -39,8 +39,8 @@ class HourlyWeatherAdapter(
         fun bind(context: Context, hourly: Hourly) {
 
             // add data
-            tvTemperature.text = hourly.temp?.toInt().toString()+"º"
-            tvTime.text = getDateTime(hourly.dt!!.toLong())
+            tvTemperature.text = hourly.temp?.toInt().toString() + "º"
+            tvTime.text = getHour(hourly.dt!!.toLong())
 
             val res = hourly.weather?.get(0)?.icon
 
@@ -52,14 +52,9 @@ class HourlyWeatherAdapter(
 
         }
 
-        private fun getDateTime(s: Long): String? {
-            try {
-                val sdf = SimpleDateFormat("HH:mm")
-                val netDate = Date(s * 1000)
-                return sdf.format(netDate)
-            } catch (e: Exception) {
-                return e.toString()
-            }
+        // Convert hour
+        private fun getHour(timestamp: Long): String {
+            return SimpleDateFormat("HH:mm", Locale.ENGLISH).format(timestamp * 1000)
         }
 
     }

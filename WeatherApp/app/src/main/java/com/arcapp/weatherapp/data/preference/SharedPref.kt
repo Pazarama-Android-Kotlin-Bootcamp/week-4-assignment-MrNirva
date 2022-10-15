@@ -6,6 +6,13 @@ import com.arcapp.weatherapp.constant.Constants
 import com.arcapp.weatherapp.enum.AppTheme
 import com.arcapp.weatherapp.enum.UnitsOfMeasure
 
+/*
+
+    * This class allows us to read and write data to memory with SharedPreferences.
+    * Data related to application settings
+
+*/
+
 class SharedPref(var context:Context) {
 
     companion object{

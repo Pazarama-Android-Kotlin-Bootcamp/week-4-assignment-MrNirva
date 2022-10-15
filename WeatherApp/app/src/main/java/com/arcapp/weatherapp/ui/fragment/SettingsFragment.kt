@@ -66,6 +66,8 @@ class SettingsFragment : Fragment() {
 
     }
 
+    // Setting for system, dark and light themes
+    // Custom AlertDialog and Custom Layout
     private fun appThemeSelection(){
 
         val alertDialogBuilder = AlertDialog.Builder(requireContext())
@@ -76,6 +78,7 @@ class SettingsFragment : Fragment() {
         val rbLight = customLayout.findViewById<RadioButton>(R.id.rbLight)
         val rbDark = customLayout.findViewById<RadioButton>(R.id.rbDark)
 
+        // select current theme
         when(sharedPref.getAppTheme()){
 
             AppTheme.System.toString() -> {
@@ -94,16 +97,19 @@ class SettingsFragment : Fragment() {
 
         }
 
+        // save the selected theme and active
         rbSystem.setOnClickListener{
             sharedPref.setAppTheme(rbSystem.text.toString())
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_UNSPECIFIED)
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         }
 
+        // save the selected theme and active
         rbLight.setOnClickListener{
             sharedPref.setAppTheme(rbLight.text.toString())
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         }
 
+        // save the selected theme and active
         rbDark.setOnClickListener{
             sharedPref.setAppTheme(rbDark.text.toString())
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
@@ -114,6 +120,7 @@ class SettingsFragment : Fragment() {
 
     }
 
+    // Setting for units of measure -> Centigrade, Fahrenheit, Kelvin
     private fun unitsOfMeasureSelection(){
 
         val alertDialogBuilder = AlertDialog.Builder(requireContext())
@@ -125,6 +132,7 @@ class SettingsFragment : Fragment() {
         val rbFahrenheit = customLayout.findViewById<RadioButton>(R.id.rbFahrenheit)
         val rbKelvin = customLayout.findViewById<RadioButton>(R.id.rbKelvin)
 
+        // select the current unit
         when(sharedPref.getUnitOfMeasure()){
 
             UnitsOfMeasure.STANDART.toString() -> {
@@ -143,18 +151,21 @@ class SettingsFragment : Fragment() {
 
         }
 
+        // save the selected unit
         rbKelvin.setOnClickListener{
             sharedPref.setUnitOfMeasure(UnitsOfMeasure.STANDART.toString())
             showSharedData()
             alertDialog.cancel()
         }
 
+        // save the selected unit
         rbCentigrade.setOnClickListener{
             sharedPref.setUnitOfMeasure(UnitsOfMeasure.METRIC.toString())
             showSharedData()
             alertDialog.cancel()
         }
 
+        // save the selected unit
         rbFahrenheit.setOnClickListener{
             sharedPref.setUnitOfMeasure(UnitsOfMeasure.IMPERIAL.toString())
             showSharedData()
@@ -166,6 +177,7 @@ class SettingsFragment : Fragment() {
 
     }
 
+    // Get the theme and temperature units in memory
     private fun showSharedData(){
 
         bnd.tvThemeName.text = sharedPref.getAppTheme()

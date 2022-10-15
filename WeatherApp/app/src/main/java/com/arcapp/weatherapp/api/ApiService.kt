@@ -6,6 +6,12 @@ import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
 
+/*
+
+    * This interface contains our api services
+
+*/
+
 interface ApiService {
 
     @GET("geo/1.0/direct")
@@ -19,7 +25,6 @@ interface ApiService {
         @Query(value = "lat") Latitude:Double,
         @Query(value = "lon") Longitude:Double,
         @Query(value = "units") unitsOfMeasure:String
-        // @Query(value = "lang") language:String
     ) : Call<WeatherModel>
 
 }

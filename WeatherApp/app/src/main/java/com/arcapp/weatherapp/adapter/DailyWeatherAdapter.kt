@@ -40,11 +40,17 @@ class DailyWeatherAdapter(
 
         fun bind(context: Context, daily: Daily) {
 
-            // add data
-            tvTemperatureDay.text = daily.temp?.day?.toInt().toString()+"º"
-            tvTemperatureNight.text = daily.temp?.night?.toInt().toString()+"º"
+            daily.let {
+                if(it.temp != null){
 
-            tvDayName.text = getDay(daily.dt!!.toLong())
+                    // add data
+                    tvTemperatureDay.text = it.temp.day?.toInt().toString() + "º"
+                    tvTemperatureNight.text = it.temp.night?.toInt().toString() + "º"
+
+                    tvDayName.text = getDay(it.dt!!.toLong())
+
+                }
+            }
 
             val res = daily.weather?.get(0)?.icon
 
@@ -56,6 +62,7 @@ class DailyWeatherAdapter(
 
         }
 
+        // Convert day names
         private fun getDay(timestamp: Long): String {
             return SimpleDateFormat("EEEE", Locale.ENGLISH).format(timestamp * 1000)
         }

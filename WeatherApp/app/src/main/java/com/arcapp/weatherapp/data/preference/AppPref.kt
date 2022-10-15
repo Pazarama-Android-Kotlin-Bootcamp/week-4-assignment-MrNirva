@@ -7,6 +7,13 @@ import androidx.datastore.preferences.preferencesDataStore
 import com.arcapp.weatherapp.constant.Constants
 import kotlinx.coroutines.flow.first
 
+/*
+
+    * This class allows us to read and write data to memory with DataStore.
+    * We only read and write location data
+
+*/
+
 class AppPref(var context: Context) {
 
     companion object{
