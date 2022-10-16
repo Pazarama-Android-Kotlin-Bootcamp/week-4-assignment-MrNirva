@@ -1,7 +1,7 @@
 # Week-4-Assignment
 
-<img src="https://github.com/Pazarama-Android-Kotlin-Bootcamp/week-4-assignment-MrNirva/tree/main/WeatherApp/gif.gif" width="200" height="400"/>
-<img src="https://harun.xyz/ss.png" height="405" width="1024" >
+<img src="https://raw.githubusercontent.com/Pazarama-Android-Kotlin-Bootcamp/week-4-assignment-MrNirva/main/WeatherApp/gif.gif" width="200" height="400"/>
+<img src="https://raw.githubusercontent.com/Pazarama-Android-Kotlin-Bootcamp/week-4-assignment-MrNirva/main/WeatherApp/ss.png" height="405" width="1024" >
 
 ## Summary
 This weather application is coded in accordance with the single activity principle. Androidx and 3rd party libraries are used. Weather data obtained with Retrofit is saved to the memory with Data Store and then displayed when needed. This app has Light and Dark mode and can display Temperatures in Celsius, Fahrenheit and Kelvin. 
